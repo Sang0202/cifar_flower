@@ -6,8 +6,8 @@ import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
-
 import flwr as fl
+from datetime import datetime
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # DEVICE = torch.device("cpu")
@@ -15,7 +15,7 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def load_data():
     """Load CIFAR-10 (training and test set)."""
     transform = transforms.Compose(
-    [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     )
     trainset = CIFAR10(".", train=True, download=True, transform=transform)
     testset = CIFAR10(".", train=False, download=True, transform=transform)
@@ -95,8 +95,18 @@ class CifarClient(fl.client.NumPyClient):
         loss, accuracy = test(net, testloader)
         return float(loss), num_examples["testset"], {"accuracy": float(accuracy)}
     
+def save_model(model, path='model.pth'):
+    torch.save(model.state_dict(), path)
+    print(f"Model saved to {path}")
+    
 
 if __name__ == "__main__":
     fl.client.start_client(
         server_address="127.0.0.1:8080", 
         client=CifarClient().to_client())
+    
+now = datetime.now()
+timestamp = datetime.timestamp(now) 
+model_path = f"model_{timestamp}.pth"
+
+save_model(net, path=model_path)
