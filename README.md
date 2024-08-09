@@ -19,7 +19,8 @@ docker build -t flower_client .
 
 ### 2. Create a Docker Network
 
-Create a Docker network to allow communication between the server and clients:
+Create a Docker network to allow communication between the server and clients.
+This is an bridge network that lets containers connected to the same bridge network communicate, while providing isolation from containers that aren't connected to that bridge network. It only apply to containers running on the same Docker daemon host.
 
 ```bash
 docker network create flower_network
