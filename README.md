@@ -38,7 +38,7 @@ docker run --rm --network flower_network --name flower_client_1 flower_client
 
 - Run the second client:
 ```bash
-docker run --rm --network flower_network --name flower_client_1 flower_client
+docker run --rm --network flower_network --name flower_client_2 flower_client
 ```
 ## Running Directly
 ### Installation
